@@ -194,10 +194,8 @@ public class testPath : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger in");
         if (other.tag == "Transfer" && other.gameObject.GetComponent<com_pathpoint>().isTransfer)
         {
-            Debug.Log("trigger on");
             com_pathpoint cp = other.gameObject.GetComponent<com_pathpoint>();
             getTransfer = true;
             transferPath = cp.targetPath;

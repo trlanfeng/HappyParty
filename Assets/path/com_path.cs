@@ -23,7 +23,7 @@ public class com_path : MonoBehaviour
     {
         get
         {
-            return this.transform.localToWorldMatrix.MultiplyPoint(_pathpoints[_pathpoints.Count-1]);
+            return this.transform.localToWorldMatrix.MultiplyPoint(_pathpoints[_pathpoints.Count - 1]);
         }
     }
     public Vector3 curPos
@@ -40,6 +40,23 @@ public class com_path : MonoBehaviour
             return _curPos;
         }
     }
+
+    public int PointCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (Transform item in transform)
+            {
+                if (item.gameObject.name.IndexOf('b') != 0)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
+
     [SerializeField]
     Vector3 _curPos;
     [SerializeField]
@@ -67,27 +84,27 @@ public class com_path : MonoBehaviour
             adddist -= move;
             Vector3 add = dir.normalized * move;
             _curPos += add;
-            if(bNext)
+            if (bNext)
             {
-                if(pathType== Pathtype.Path_Loop)
+                if (pathType == Pathtype.Path_Loop)
                 {
                     curIndex++;
-                    if(curIndex>=_pathpoints.Count)
+                    if (curIndex >= _pathpoints.Count)
                     {
-                        curIndex=0;
+                        curIndex = 0;
                     }
                 }
-                else if(pathType== Pathtype.Path_Once)
+                else if (pathType == Pathtype.Path_Once)
                 {
                     curIndex++;
-                    if(curIndex>=_pathpoints.Count)
+                    if (curIndex >= _pathpoints.Count)
                     {
-                        curIndex =_pathpoints.Count-1;
+                        curIndex = _pathpoints.Count - 1;
                         isEnded = true;
                         break;
                     }
                 }
-                else if (pathType== Pathtype.Path_PingPang)
+                else if (pathType == Pathtype.Path_PingPang)
                 {
                     curIndex += pathDir;
                     if (curIndex >= _pathpoints.Count || curIndex < 0)
@@ -129,7 +146,7 @@ public class com_path : MonoBehaviour
         curIndex = 0;
         pathDir = 1;
     }
-    public void ResetCustom(Vector3 curPos,int index,int dir)
+    public void ResetCustom(Vector3 curPos, int index, int dir)
     {
         _curPos = curPos;
         curIndex = index;
@@ -140,15 +157,15 @@ public class com_path : MonoBehaviour
         return;
 
     }
-	
-	public void ToggleShowCube()
-	{
-		foreach (Transform p in this.transform)
+
+    public void ToggleShowCube()
+    {
+        foreach (Transform p in this.transform)
         {
             p.GetComponent<MeshRenderer>().enabled = !p.GetComponent<MeshRenderer>().enabled;
         }
-	}
-	
+    }
+
     public List<com_pathpoint> GetSourcePointList()
     {
         //寻找路径
@@ -228,15 +245,15 @@ public class com_path : MonoBehaviour
         {
             lrender.SetPosition(i, _pathpoints[i]);
         }
-        if(pathType== Pathtype.Path_Loop)
+        if (pathType == Pathtype.Path_Loop)
         {
-            lrender.SetPosition(pathcount-1, _pathpoints[0]);
+            lrender.SetPosition(pathcount - 1, _pathpoints[0]);
         }
 
         Reset();
     }
     public int bPointCount = 0;
-    public void SetPath(int startIndex,int endIndex)
+    public void SetPath(int startIndex, int endIndex)
     {
         bPointCount = 0;
         //寻找路径
@@ -255,13 +272,11 @@ public class com_path : MonoBehaviour
             }
             points.Add(i, transform.GetChild(i).GetComponent<com_pathpoint>());
         }
-        Debug.Log("points.Count:::"+points.Count);
         List<com_pathpoint> _path = new List<com_pathpoint>();
         foreach (com_pathpoint p in points.Values)
         {
             _path.Add(p);
         }
-        Debug.Log("_path.Count:::" + _path.Count);
         //计算线段
         _pathpoints.Clear();
         //List<Vector2> tpoints = new List<Vector2>();
@@ -285,7 +300,6 @@ public class com_path : MonoBehaviour
                 for (int e = 1; e <= _path[i].BezierElement; e++)
                 {
                     float f = (float)e * (float)(1.0f / (float)_path[i].BezierElement);
-                    Debug.Log("f=" + f);
                     _pathpoints.Add(CalculateBezierPoint(f, p0, p1, p2));
                 }
                 i++;
